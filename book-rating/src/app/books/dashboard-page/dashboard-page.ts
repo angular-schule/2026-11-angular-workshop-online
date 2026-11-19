@@ -18,35 +18,40 @@ export class DashboardPage {
         title: 'Angular',
         description: 'Grundlagen und mehr',
         rating: 5,
-        authors: ['FM', 'DK', 'JH']
+        authors: ['FM', 'DK', 'JH'],
+        price: 32.9
       },
       {
         isbn: '456',
         title: 'Vue.js',
         description: 'Das grüne Framework',
         rating: 3,
-        authors: ['JS']
+        authors: ['JS'],
+        price: 34.9
       },
       {
         isbn: '789',
         title: 'React',
         description: 'Die Bibliothek von Meta',
         rating: 4,
-        authors: ['MM', 'AB']
+        authors: ['MM', 'AB'],
+        price: 36.9
       },
       {
         isbn: '321',
         title: 'TypeScript',
         description: 'JavaScript mit Typen',
         rating: 5,
-        authors: ['AH']
+        authors: ['AH'],
+        price: 32.00
       },
       {
         isbn: '654',
         title: 'RxJS',
         description: 'Reaktive Programmierung mit Observables',
         rating: 2,
-        authors: ['BL', 'NJ']
+        authors: ['BL', 'NJ'],
+        price: 32.9
       }
     ]);
   }
