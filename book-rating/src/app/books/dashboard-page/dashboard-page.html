@@ -1,1 +1,4 @@
-<p>dashboard-page works!</p>
+@for (b of books(); track b) {
+    <app-book-card [book]="b" />
+}
+
