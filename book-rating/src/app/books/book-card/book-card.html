@@ -10,5 +10,13 @@
     </header>
     <p>{{ book().description }}</p>
     <p><strong>Preis:</strong> {{ book().price }}</p>
+
+    <button type="button" class="btn btn-green"
+      (click)="doRateUp()"
+      aria-label="Bewertung erhöhen für das Buch '{{ book().title }}'"> + </button>
+
+    <button type="button" class="btn btn-red"
+      (click)="doRateDown()"
+      aria-label="Bewertung verringern für das Buch '{{ book().title }}'"> – </button>
   </div>
 </article>
