@@ -2,6 +2,7 @@ import { Service } from '@angular/core';
 import { Book } from './book';
 
 @Service()
+// früher: @Injectable({ providedIn: 'root' })
 export class BookRatingHelper {
     rateUp(book: Book): Book {
         // Early Exit
