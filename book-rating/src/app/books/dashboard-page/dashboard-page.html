@@ -1,8 +1,15 @@
-<p>Anzahl Bücher: {{ books().length }}</p>
+<p>Status: {{ books.status() }}</p>
 
-@for (b of books(); track b.isbn) {
-    <app-book-card
-        [book]="b"
-        (rateUp)="doRateUp($event)"
-        (rateDown)="doRateDown($event)" />
+<button type="button" class="btn btn-yellow"
+    (click)="books.reload()">Reload</button>
+
+@if (books.hasValue()) {
+    <p>Anzahl Bücher: {{ books.value().length }}</p>
+
+    @for (b of books.value(); track b.isbn) {
+        <app-book-card
+            [book]="b"
+            (rateUp)="doRateUp($event)"
+            (rateDown)="doRateDown($event)" />
+    }
 }

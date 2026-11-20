@@ -12,16 +12,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './dashboard-page.html',
 })
 export class DashboardPage {
-  protected readonly books = signal<Book[]>([]);
-
-  #bookRatingHelper = inject(BookRatingHelper);
   #bookStore = inject(BookStore);
+  #bookRatingHelper = inject(BookRatingHelper);
 
-  constructor() {
-    this.#bookStore.getAll().subscribe(receivedBooks => {
-      this.books.set(receivedBooks);
-    });
-  }
+  protected readonly books = this.#bookStore.getAllResource();
 
   doRateUp(book: Book) {
     const ratedBook = this.#bookRatingHelper.rateUp(book);
@@ -34,7 +28,7 @@ export class DashboardPage {
   }
 
   #updateList(ratedBook: Book) {
-    this.books.update(currentList => {
+    this.books.value.update(currentList => {
       return currentList.map(b => {
         if (b.isbn === ratedBook.isbn) {
           return ratedBook;
