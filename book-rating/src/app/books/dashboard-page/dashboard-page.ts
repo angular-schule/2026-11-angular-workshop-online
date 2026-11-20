@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookCard } from '../book-card/book-card';
 import { BookRatingHelper } from '../shared/book-rating-helper';
+import { BookStore } from '../shared/book-store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [BookCard],
@@ -13,50 +15,12 @@ export class DashboardPage {
   protected readonly books = signal<Book[]>([]);
 
   #bookRatingHelper = inject(BookRatingHelper);
+  #bookStore = inject(BookStore);
 
   constructor() {
-    this.books.set([
-      {
-        isbn: '123',
-        title: 'Angular',
-        description: 'Grundlagen und mehr',
-        rating: 5,
-        authors: ['FM', 'DK', 'JH'],
-        price: 32.9
-      },
-      {
-        isbn: '456',
-        title: 'Vue.js',
-        description: 'Das grüne Framework',
-        rating: 3,
-        authors: ['JS'],
-        price: 34.9
-      },
-      {
-        isbn: '789',
-        title: 'React',
-        description: 'Die Bibliothek von Meta',
-        rating: 4,
-        authors: ['MM', 'AB'],
-        price: 36.9
-      },
-      {
-        isbn: '321',
-        title: 'TypeScript',
-        description: 'JavaScript mit Typen',
-        rating: 5,
-        authors: ['AH'],
-        price: 32.00
-      },
-      {
-        isbn: '654',
-        title: 'RxJS',
-        description: 'Reaktive Programmierung mit Observables',
-        rating: 2,
-        authors: ['BL', 'NJ'],
-        price: 32.9
-      }
-    ]);
+    this.#bookStore.getAll().subscribe(receivedBooks => {
+      this.books.set(receivedBooks);
+    });
   }
 
   doRateUp(book: Book) {
