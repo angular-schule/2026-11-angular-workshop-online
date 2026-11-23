@@ -1,9 +1,21 @@
 @if (book.hasValue()) {
-    <h2>{{ book.value().title }}</h2>
-    <p>{{ book.value().description }}</p>
+<h2>{{ book.value().title }}</h2>
+<p>{{ book.value().description }}</p>
+}
+
+@if (book.status() === 'error') {
+    <p>ERROR: {{ book.error() | json }}</p>
 }
 
 <hr>
 
+
+@boundary {
+    {{ book.value() | json }}
+} @error (let e) {
+    <p>ERROR! {{ e }}</p>
+}
+
 <a routerLink="/books/dashboard">Zum Dashboard</a><br>
-<a [routerLink]="['/books', 'details', '9783988890641']">Zum Angular-Buch</a>
+<a [routerLink]="['/books', 'details', '9783988890641']">Zum Angular-Buch</a><br>
+<a [routerLink]="['/books', 'details', 'INVALID']">Zum Fehlerbuch</a>
