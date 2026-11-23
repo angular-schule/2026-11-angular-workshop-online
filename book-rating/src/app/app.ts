@@ -1,22 +1,17 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
 export class App {
   protected readonly title = signal('Book Rating');
+
+  protected readonly navItems = [
+    { path: '/books/dashboard', label: 'Dashboard' },
+    { path: '/books/create', label: 'Buch erstellen' },
+  ];
 }
-
-
-/* TODO
-- Root-URL: Startseite oder Weiterleitung zu "books"
-- Fehlerseite für unbekannte Routen
-- Links setzen
-  - von BookCard zur Detailseite
-  - von Detailseite zum Dashboard
-- Detailseite
-*/

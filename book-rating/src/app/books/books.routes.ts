@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { DashboardPage } from "./dashboard-page/dashboard-page";
 import { BookDetailsPage } from "./book-details-page/book-details-page";
+import { BookCreatePage } from "./book-create-page/book-create-page";
 
 export const booksRoutes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -14,4 +15,5 @@ export const booksRoutes: Routes = [
         }*/
     },
     { path: 'details/:isbn', component: BookDetailsPage },
+    { path: 'create', component: BookCreatePage }
 ];

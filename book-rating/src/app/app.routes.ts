@@ -14,3 +14,17 @@ export const routes: Routes = [
     // Wildcard-Route, muss immer ganz unten stehen
     { path: '**', component: NotFoundPage }
 ];
+
+
+/*
+AUFGABE:
+neue Komponente BookCreatePage
+unter dem Pfad /books/create
+Keine Inhalte auf der Seite
+Einfache Navigationsleiuste in der Komponente App
+- Dashboard
+- Buch erstellen
+
+ZUSATZAUFGABE:
+Die Navigation auf Basis von Daten erzeugen, nicht einzelne Links im Template
+*/
