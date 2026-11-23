@@ -1,5 +1,5 @@
 import { HttpClient, httpResource } from '@angular/common/http';
-import { inject, Service, Signal } from '@angular/core';
+import { inject, InjectionToken, Service, Signal } from '@angular/core';
 import { Book } from './book';
 
 @Service()

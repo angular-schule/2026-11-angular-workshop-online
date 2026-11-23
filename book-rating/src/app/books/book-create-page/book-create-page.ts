@@ -6,4 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './book-create-page.scss',
   templateUrl: './book-create-page.html',
 })
-export class BookCreatePage {}
+export class BookCreatePage {
+}
