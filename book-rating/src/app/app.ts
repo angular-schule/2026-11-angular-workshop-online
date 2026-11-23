@@ -10,3 +10,13 @@ import { RouterOutlet } from '@angular/router';
 export class App {
   protected readonly title = signal('Book Rating');
 }
+
+
+/* TODO
+- Root-URL: Startseite oder Weiterleitung zu "books"
+- Fehlerseite für unbekannte Routen
+- Links setzen
+  - von BookCard zur Detailseite
+  - von Detailseite zum Dashboard
+- Detailseite
+*/
