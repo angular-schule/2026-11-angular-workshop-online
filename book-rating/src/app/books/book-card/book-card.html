@@ -21,5 +21,12 @@
       <span aria-hidden="true">🗑️</span>
       Löschen
     </button>
+
+    <a [routerLink]="['/books', 'details', book().isbn]">Details</a>
+    <!--<a [routerLink]="['..', 'details', book().isbn]">Details</a>
+    <a [routerLink]="'/books/details/' + book().isbn">Details</a>
+    <a [routerLink]="`/books/details/${book().isbn}`">Details</a>
+    <a routerLink="/books/details/{{ book().isbn }}">Details</a>
+    <a routerLink="/books/dashboard">Dashboard</a>-->
   </div>
 </article>

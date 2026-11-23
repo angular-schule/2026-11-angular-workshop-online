@@ -1,9 +1,17 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-book-details-page',
   styleUrl: './book-details-page.scss',
   templateUrl: './book-details-page.html',
 })
 export class BookDetailsPage {}
+
+/**
+ * TODO:
+ * - ISBN aus der URL
+ * - Buch laden per HTTP (Resource API)
+ * - Buch anzeigen
+ */
