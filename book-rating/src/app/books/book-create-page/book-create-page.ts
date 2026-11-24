@@ -32,18 +32,19 @@ export class BookCreatePage {
   // FieldTree: Navigation im Formularbaum
   protected readonly bookForm = form(
     this.bookFormData,
+    // Schema zur Validierung
     (path) => {
-      required(path.isbn);
-      minLength(path.isbn, 10)
-      maxLength(path.isbn, 13)
-      required(path.title);
+      required(path.isbn, { message: 'ISBN muss angegeben werden.' });
+      minLength(path.isbn, 10, { message: 'ISBN ist zu kurz.' })
+      maxLength(path.isbn, 13, { message: 'ISBN ist zu lang' })
+      required(path.title, { message: 'Titel muss angegeben werden.' });
       
-      required(path.rating);
-      min(path.rating, 1);
-      max(path.rating, 5);
+      required(path.rating, { message: 'Bewertung muss angegeben werden.' });
+      min(path.rating, 1, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
+      max(path.rating, 5, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
       
-      required(path.price);
-      min(path.price, 0);
+      required(path.price, { message: 'Preis muss angegeben werden.' });
+      min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
     }
   );
 }
