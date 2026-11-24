@@ -1,7 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
 import { form, FormField, FormRoot, max, maxLength, min, minLength, provideSignalFormsConfig, required } from '@angular/forms/signals';
 import { JsonPipe } from '@angular/common';
+import { BookStore } from '../shared/book-store';
+import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [FormField, FormRoot, JsonPipe],
@@ -18,6 +22,10 @@ import { JsonPipe } from '@angular/common';
   ]
 })
 export class BookCreatePage {
+
+  #bookStore = inject(BookStore);
+  #router = inject(Router);
+
   // Datenmodell
   protected readonly bookFormData = signal<Book>({
     isbn: '',
@@ -45,6 +53,47 @@ export class BookCreatePage {
       
       required(path.price, { message: 'Preis muss angegeben werden.' });
       min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
+    },
+    {
+      submission: {
+        // solange die Submission Action läuft, ist das Formular im Zustand "submitting"
+        action: async (f) => {
+          const newBook = f().value();
+          try {
+            const receivedBook = await firstValueFrom(this.#bookStore.create(newBook));
+            // this.#router.navigateByUrl('/books/dashboard');
+            await this.#router.navigate(['/books', 'details', receivedBook.isbn]);
+          } catch (e: unknown) {
+            if (e instanceof HttpErrorResponse) {
+              // Fehler auf Basis der Serverantwort erzeugen
+              // TODO …
+              return [
+                {
+                  kind: 'isbnUnknownError',
+                  message: 'Die ISBN hat einen unbekannten Fehler: ' + e.error.error,
+                  fieldTree: f.isbn
+                }
+              ];
+            }
+          }
+          return;
+        }
+      }
     }
   );
 }
+
+
+/*
+- Abschicken-Aktion verdrahten
+- Standardaktion unterbinden (nicht neuladen)
+- Browservaldierung abschalten
+- prüfen, ob Formular gültig ist
+  - wenn nicht, alle Felder als touched markieren
+
+
+- Daten auslesen aus dem Formular
+- Buch per HTTP-Request zum Server schicken (BookStore.create())
+- bei Erfolg: wegnavigieren, z. B. zu Dashboard oder Detailseite
+- bei Nicht-Erfolg: Fehler im Formular anzeigen
+*/

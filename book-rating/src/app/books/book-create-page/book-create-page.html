@@ -1,6 +1,8 @@
 <h2>Buch erstellen</h2>
 
-<form>
+<p>submitting: {{ bookForm().submitting() }}</p>
+
+<form [formRoot]="bookForm">
     <div class="form-group">
         <label for="isbnInput">ISBN</label>
         <input type="text" id="isbnInput" class="form-control"
