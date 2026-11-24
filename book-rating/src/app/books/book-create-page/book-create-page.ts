@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
-import { apply, applyEach, applyWhen, disabled, form, FormField, FormRoot, hidden, max, maxLength, min, minLength, provideSignalFormsConfig, readonly, required, schema } from '@angular/forms/signals';
+import { apply, applyEach, applyWhen, disabled, form, FormField, FormRoot, hidden, max, maxLength, min, minLength, provideSignalFormsConfig, readonly, required, schema, SchemaPath, validate } from '@angular/forms/signals';
 import { JsonPipe } from '@angular/common';
 import { BookStore } from '../shared/book-store';
 import { firstValueFrom } from 'rxjs';
@@ -12,6 +12,13 @@ const isbnSchema = schema<string>(path => {
   minLength(path, 10, { message: 'ISBN ist zu kurz.' });
   maxLength(path, 13, { message: 'ISBN ist zu lang' });
 })
+
+
+function valueRange(path: SchemaPath<number>, minValue: number, maxValue: number) {
+  required(path, { message: 'Wert muss angegeben werden.' });
+  min(path, minValue, { message: 'Wert muss innerhalb der Range liegen.' });
+  max(path, maxValue, { message: 'Wert muss innerhalb der Range liegen.' });
+}
 
 
 @Component({
@@ -67,9 +74,11 @@ export class BookCreatePage {
 
       required(path.title, { message: 'Titel muss angegeben werden.' });
       
-      required(path.rating, { message: 'Bewertung muss angegeben werden.' });
+      /*required(path.rating, { message: 'Bewertung muss angegeben werden.' });
       min(path.rating, 1, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
-      max(path.rating, 5, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
+      max(path.rating, 5, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });*/
+
+      valueRange(path.rating, 1, 5);
       
       required(path.price, { message: 'Preis muss angegeben werden.' });
       min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
@@ -77,6 +86,17 @@ export class BookCreatePage {
       // Schema auf jedes Feld in path.authors anwenden
       applyEach(path.authors, (authorPath) => {
         required(authorPath);
+
+        validate(authorPath, ctx => {
+          if (ctx.value().includes(' ')) {
+            return null;
+          } else {
+            return {
+              kind: 'authorSpaces',
+              message: 'Der Autorname muss min. 1 Leerzeichen haben.'
+            }
+          }
+        });
       });
     },
     {

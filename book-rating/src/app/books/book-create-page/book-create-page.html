@@ -49,6 +49,8 @@
         <legend>Autoren</legend>
         <button type="button" class="btn btn-yellow" (click)="addAuthorField()">+ Autor</button>
 
+        <pre>{{ bookForm.authors().errorSummary() | json }}</pre>
+
         @for (authorField of bookForm.authors; track authorField) {
             <input type="text" class="form-control" [formField]="authorField" [aria-label]="`Autor ${$index + 1}`" />
         }
