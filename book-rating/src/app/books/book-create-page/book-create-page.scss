@@ -1,3 +1,8 @@
 .invalid {
     border: 2px solid red;
 }
+
+label:has(+input:required)::after {
+    content: ' *';
+    color: red;
+}
