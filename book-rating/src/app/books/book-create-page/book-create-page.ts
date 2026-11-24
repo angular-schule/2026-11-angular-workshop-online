@@ -1,11 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
-import { applyEach, form, FormField, FormRoot, max, maxLength, min, minLength, provideSignalFormsConfig, required, schema } from '@angular/forms/signals';
+import { apply, applyEach, applyWhen, disabled, form, FormField, FormRoot, hidden, max, maxLength, min, minLength, provideSignalFormsConfig, readonly, required, schema } from '@angular/forms/signals';
 import { JsonPipe } from '@angular/common';
 import { BookStore } from '../shared/book-store';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+
+const isbnSchema = schema<string>(path => {
+  required(path, { message: 'ISBN muss angegeben werden.' });
+  minLength(path, 10, { message: 'ISBN ist zu kurz.' });
+  maxLength(path, 13, { message: 'ISBN ist zu lang' });
+})
+
 
 @Component({
   imports: [FormField, FormRoot, JsonPipe],
@@ -42,9 +49,21 @@ export class BookCreatePage {
     this.bookFormData,
     // Schema zur Validierung
     (path) => {
-      required(path.isbn, { message: 'ISBN muss angegeben werden.' });
-      minLength(path.isbn, 10, { message: 'ISBN ist zu kurz.' })
-      maxLength(path.isbn, 13, { message: 'ISBN ist zu lang' })
+      // Schema-Komposition
+      apply(path.isbn, isbnSchema);
+
+      // Konditionale Validierung: Wende dieses Schema nur an, wenn Bedingung erfüllt ist.
+      // Beschreibung wird Pflichtfeld, wenn Titel ausgefüllt ist
+      applyWhen(
+        path.description,
+        ctx => ctx.valueOf(path.title) !== '',
+        descPath => {
+          // required(descPath);
+          // readonly(descPath)
+          // disabled(descPath)
+          hidden(descPath)
+        }
+      );
 
       required(path.title, { message: 'Titel muss angegeben werden.' });
       
