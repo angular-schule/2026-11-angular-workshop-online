@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Book } from '../shared/book';
-import { form, FormField, FormRoot, max, maxLength, min, minLength, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, max, maxLength, min, minLength, provideSignalFormsConfig, required } from '@angular/forms/signals';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -8,6 +8,14 @@ import { JsonPipe } from '@angular/common';
   selector: 'app-book-create-page',
   styleUrl: './book-create-page.scss',
   templateUrl: './book-create-page.html',
+  providers: [
+    provideSignalFormsConfig({
+      classes: {
+        // CSS-Klasse "invalid" wird auf alle Felder (mit Direktive formField) angewendet, wenn Bedingung wahr ist
+        invalid: (formField) => formField.state().invalid() && formField.state().touched()
+      }
+    })
+  ]
 })
 export class BookCreatePage {
   // Datenmodell

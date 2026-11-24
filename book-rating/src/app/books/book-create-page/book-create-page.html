@@ -4,8 +4,7 @@
     <div class="form-group">
         <label for="isbnInput">ISBN</label>
         <input type="text" id="isbnInput" class="form-control"
-            [formField]="bookForm.isbn"
-            [class.invalid]="bookForm.isbn().invalid() && bookForm.isbn().touched()" />
+            [formField]="bookForm.isbn" />
         
         <p>valid: {{ bookForm.isbn().valid() }}</p>
         <p>touched: {{ bookForm.isbn().touched() }}</p>
