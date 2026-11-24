@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
-import { form, FormField, FormRoot, max, maxLength, min, minLength, provideSignalFormsConfig, required } from '@angular/forms/signals';
+import { applyEach, form, FormField, FormRoot, max, maxLength, min, minLength, provideSignalFormsConfig, required, schema } from '@angular/forms/signals';
 import { JsonPipe } from '@angular/common';
 import { BookStore } from '../shared/book-store';
 import { firstValueFrom } from 'rxjs';
@@ -33,7 +33,7 @@ export class BookCreatePage {
     description: '',
     price: 0,
     rating: 1,
-    authors: []
+    authors: ['', '', '']
   });
 
   // Formularmodell
@@ -45,6 +45,7 @@ export class BookCreatePage {
       required(path.isbn, { message: 'ISBN muss angegeben werden.' });
       minLength(path.isbn, 10, { message: 'ISBN ist zu kurz.' })
       maxLength(path.isbn, 13, { message: 'ISBN ist zu lang' })
+
       required(path.title, { message: 'Titel muss angegeben werden.' });
       
       required(path.rating, { message: 'Bewertung muss angegeben werden.' });
@@ -53,6 +54,11 @@ export class BookCreatePage {
       
       required(path.price, { message: 'Preis muss angegeben werden.' });
       min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
+
+      // Schema auf jedes Feld in path.authors anwenden
+      applyEach(path.authors, (authorPath) => {
+        required(authorPath);
+      });
     },
     {
       submission: {
@@ -81,6 +87,10 @@ export class BookCreatePage {
       }
     }
   );
+
+  addAuthorField() {
+    this.bookForm.authors().value.update(currentAuthors => [...currentAuthors, '']);
+  }
 }
 
 

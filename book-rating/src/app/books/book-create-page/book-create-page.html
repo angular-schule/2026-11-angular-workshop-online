@@ -43,6 +43,15 @@
             [formField]="bookForm.rating" />
     </div>
 
+    <fieldset>
+        <legend>Autoren</legend>
+        <button type="button" class="btn btn-yellow" (click)="addAuthorField()">+ Autor</button>
+
+        @for (authorField of bookForm.authors; track authorField) {
+            <input type="text" class="form-control" [formField]="authorField" [aria-label]="`Autor ${$index + 1}`" />
+        }
+    </fieldset>
+
     <button type="submit" class="btn btn-green">Abschicken</button>
 </form>
 
