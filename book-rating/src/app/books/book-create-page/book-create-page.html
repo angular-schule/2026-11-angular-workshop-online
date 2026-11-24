@@ -4,10 +4,12 @@
     <div class="form-group">
         <label for="isbnInput">ISBN</label>
         <input type="text" id="isbnInput" class="form-control"
+            [aria-invalid]="bookForm.isbn().touched() ? bookForm.isbn().invalid() : null"
+            [aria-errormessage]="bookForm.isbn().touched() && bookForm.isbn().invalid() ? 'isbnErrors' : null"
             [formField]="bookForm.isbn" />
         
-        @if (bookForm.isbn().touched()) {
-            <div class="feedback-error">
+        @if (bookForm.isbn().touched() && bookForm.isbn().invalid()) {
+            <div class="feedback-error" id="isbnErrors">
                 @for (e of bookForm.isbn().errors(); track e) {
                     <p>{{ e.message }}</p>
                 }
