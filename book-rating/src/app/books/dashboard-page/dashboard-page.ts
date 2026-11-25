@@ -4,12 +4,12 @@ import { BookCard } from '../book-card/book-card';
 import { BookRatingHelper } from '../shared/book-rating-helper';
 import { BookStore } from '../shared/book-store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { map, take, tap, timer } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-  imports: [BookCard, DatePipe, AsyncPipe],
+  imports: [BookCard, DatePipe],
   selector: 'app-dashboard-page',
   styleUrl: './dashboard-page.scss',
   templateUrl: './dashboard-page.html',
@@ -20,11 +20,9 @@ export class DashboardPage {
 
   protected readonly books = this.#bookStore.getAllResource();
 
-  protected readonly currentTimestamp = signal(Date.now());
-
-  time$ = timer(0, 1000).pipe(
-    map(() => Date.now()),
-    tap(e => console.log(e))
+  protected readonly currentTimestamp = toSignal(
+    timer(0, 1000).pipe(map(() => Date.now())),
+    { initialValue: Date.now() }
   );
 
   constructor() {
