@@ -1,11 +1,22 @@
 import { HttpClient, httpResource } from '@angular/common/http';
-import { inject, InjectionToken, Service, Signal } from '@angular/core';
+import { inject, InjectionToken, Service, signal, Signal } from '@angular/core';
 import { Book } from './book';
 
 @Service()
 export class BookStore {
     #http = inject(HttpClient);
     #apiUrl = 'https://api.angular.schule';
+
+    readonly #likedBooks = signal<Book[]>([]);
+    readonly likedBooks = this.#likedBooks.asReadonly();
+
+    addLikedBook(book: Book) {
+        this.#likedBooks.update(currentList => [...currentList, book]);
+    }
+
+    resetLikedBooks() {
+        this.#likedBooks.set([]);
+    }
 
     getAll() {
         return this.#http.get<Book[]>(this.#apiUrl + '/books');

@@ -52,6 +52,11 @@ export class DashboardPage {
     });
   }
 
+  doLike(likedBook: Book) {
+    this.#bookStore.addLikedBook(likedBook);
+  }
+
+
   #updateList(ratedBook: Book) {
     this.books.value.update(currentList => {
       return currentList.map(b => {

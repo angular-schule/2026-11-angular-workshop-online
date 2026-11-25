@@ -14,6 +14,7 @@ export class App {
   protected readonly navItems = [
     { path: '/books/dashboard', label: 'Dashboard' },
     { path: '/books/create', label: 'Buch erstellen' },
+    { path: '/books/liked', label: 'Merkliste' },
   ];
 
   constructor() {
