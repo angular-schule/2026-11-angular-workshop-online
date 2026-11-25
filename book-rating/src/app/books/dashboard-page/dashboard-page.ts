@@ -5,6 +5,7 @@ import { BookRatingHelper } from '../shared/book-rating-helper';
 import { BookStore } from '../shared/book-store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { map, timer } from 'rxjs';
 
 @Component({
   imports: [BookCard, DatePipe],
@@ -21,8 +22,17 @@ export class DashboardPage {
   protected readonly currentTimestamp = signal(Date.now());
 
   constructor() {
-    const interval = setInterval(() => this.currentTimestamp.set(Date.now()), 1000);
-    inject(DestroyRef).onDestroy(() => clearInterval(interval));
+    // AUFGABE
+    // Observable erstellen, das alle 1 sek den Zeitstempel im Signal aktualisiert
+    // Zeitstempel: Date.now()
+    // im subscribe: so wenig wie möglich
+
+    timer(0, 1000).pipe(
+      map(() => Date.now())
+    ).subscribe(timestamp => {
+      this.currentTimestamp.set(timestamp);
+    })
+    
   }
 
   doRateUp(book: Book) {
