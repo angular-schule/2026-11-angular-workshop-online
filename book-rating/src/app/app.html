@@ -5,6 +5,9 @@
     @for (item of navItems; track $index) {
       <a [routerLink]="item.path">{{ item.label }}</a>
     }
+    @if (authService.isAuthenticated()) {
+      <button class="btn btn-outline-secondary btn-sm" (click)="logout()">Logout</button>
+    }
   </nav>
 
   <router-outlet />

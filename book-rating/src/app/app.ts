@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, interval, map, Observable, Observer, of, share, Subject, Subscriber, timer } from 'rxjs';
+
+import { AuthService } from './auth/auth.service';
 
 @Component({
   imports: [RouterOutlet, RouterLink],
@@ -16,6 +18,14 @@ export class App {
     { path: '/books/create', label: 'Buch erstellen' },
     { path: '/books/liked', label: 'Merkliste' },
   ];
+
+  protected authService = inject(AuthService);
+  #router = inject(Router);
+
+  logout() {
+    this.authService.logout();
+    this.#router.navigateByUrl('/auth/login');
+  }
 
   constructor() {
 
