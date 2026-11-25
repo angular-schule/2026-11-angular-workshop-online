@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPage } from './dashboard-page';
 import { BookRatingHelper } from '../shared/book-rating-helper';
 import { Book } from '../shared/book';
+import { of } from 'rxjs';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
@@ -13,6 +14,10 @@ describe('DashboardPage', () => {
       rateUp: (b: Book) => b,
       rateDown: (b: Book) => b,
     };
+
+    /*bookStoreStub = {
+      getAll: () => of([])
+    }*/
 
     await TestBed.configureTestingModule({
       imports: [DashboardPage],
