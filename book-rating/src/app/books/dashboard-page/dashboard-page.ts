@@ -5,7 +5,8 @@ import { BookRatingHelper } from '../shared/book-rating-helper';
 import { BookStore } from '../shared/book-store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { map, timer } from 'rxjs';
+import { map, take, timer } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [BookCard, DatePipe],
@@ -28,11 +29,15 @@ export class DashboardPage {
     // im subscribe: so wenig wie möglich
 
     timer(0, 1000).pipe(
-      map(() => Date.now())
-    ).subscribe(timestamp => {
-      this.currentTimestamp.set(timestamp);
-    })
-    
+      map(() => Date.now()),
+      takeUntilDestroyed()
+    ).subscribe({
+      next: timestamp => {
+        console.log(timestamp);
+        this.currentTimestamp.set(timestamp);
+      },
+      complete: () => console.log('COMPLETE')
+    })    
   }
 
   doRateUp(book: Book) {
