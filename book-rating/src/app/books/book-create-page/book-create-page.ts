@@ -20,6 +20,51 @@ function valueRange(path: SchemaPath<number>, minValue: number, maxValue: number
   max(path, maxValue, { message: 'Wert muss innerhalb der Range liegen.' });
 }
 
+const bookFormSchema = schema<Book>((path) => {
+  // Schema-Komposition
+  apply(path.isbn, isbnSchema);
+
+  // Konditionale Validierung: Wende dieses Schema nur an, wenn Bedingung erfüllt ist.
+  // Beschreibung wird Pflichtfeld, wenn Titel ausgefüllt ist
+  applyWhen(
+    path.description,
+    ctx => ctx.valueOf(path.title) !== '',
+    descPath => {
+      // required(descPath);
+      // readonly(descPath)
+      // disabled(descPath)
+      hidden(descPath)
+    }
+  );
+
+  required(path.title, { message: 'Titel muss angegeben werden.' });
+  
+  /*required(path.rating, { message: 'Bewertung muss angegeben werden.' });
+  min(path.rating, 1, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
+  max(path.rating, 5, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });*/
+
+  valueRange(path.rating, 1, 5);
+  
+  required(path.price, { message: 'Preis muss angegeben werden.' });
+  min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
+
+  // Schema auf jedes Feld in path.authors anwenden
+  applyEach(path.authors, (authorPath) => {
+    required(authorPath);
+
+    validate(authorPath, ctx => {
+      if (ctx.value().includes(' ')) {
+        return null;
+      } else {
+        return {
+          kind: 'authorSpaces',
+          message: 'Der Autorname muss min. 1 Leerzeichen haben.'
+        }
+      }
+    });
+  });
+});
+
 
 @Component({
   imports: [FormField, FormRoot, JsonPipe],
@@ -41,7 +86,7 @@ export class BookCreatePage {
   #router = inject(Router);
 
   // Datenmodell
-  protected readonly bookFormData = signal<Book>({
+  protected readonly bookFormData = signal({
     isbn: '',
     title: '',
     description: '',
@@ -55,50 +100,7 @@ export class BookCreatePage {
   protected readonly bookForm = form(
     this.bookFormData,
     // Schema zur Validierung
-    (path) => {
-      // Schema-Komposition
-      apply(path.isbn, isbnSchema);
-
-      // Konditionale Validierung: Wende dieses Schema nur an, wenn Bedingung erfüllt ist.
-      // Beschreibung wird Pflichtfeld, wenn Titel ausgefüllt ist
-      applyWhen(
-        path.description,
-        ctx => ctx.valueOf(path.title) !== '',
-        descPath => {
-          // required(descPath);
-          // readonly(descPath)
-          // disabled(descPath)
-          hidden(descPath)
-        }
-      );
-
-      required(path.title, { message: 'Titel muss angegeben werden.' });
-      
-      /*required(path.rating, { message: 'Bewertung muss angegeben werden.' });
-      min(path.rating, 1, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });
-      max(path.rating, 5, { message: 'Bewertung muss zwischen 1 und 5 liegen.' });*/
-
-      valueRange(path.rating, 1, 5);
-      
-      required(path.price, { message: 'Preis muss angegeben werden.' });
-      min(path.price, 0, { message: 'Preis darf nicht negativ sein.' });
-
-      // Schema auf jedes Feld in path.authors anwenden
-      applyEach(path.authors, (authorPath) => {
-        required(authorPath);
-
-        validate(authorPath, ctx => {
-          if (ctx.value().includes(' ')) {
-            return null;
-          } else {
-            return {
-              kind: 'authorSpaces',
-              message: 'Der Autorname muss min. 1 Leerzeichen haben.'
-            }
-          }
-        });
-      });
-    },
+    bookFormSchema,
     {
       submission: {
         // solange die Submission Action läuft, ist das Formular im Zustand "submitting"
