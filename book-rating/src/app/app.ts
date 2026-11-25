@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { interval, Observable, Observer, of, Subscriber, timer } from 'rxjs';
+import { filter, interval, map, Observable, Observer, of, Subscriber, timer } from 'rxjs';
 
 @Component({
   imports: [RouterOutlet, RouterLink],
@@ -24,7 +24,10 @@ export class App {
     // timer(3000, 1000)    // ---------0---1---2---3---4 ...
     // timer(0, 1000)       // 0---1---2---3---4 ...
     
-    timer(3000, 1000).subscribe({
+    timer(0, 1000).pipe(
+      map(e => e * 3),
+      filter(e => e % 2 === 0)
+    ).subscribe({
       next: e => console.log(e),
       complete: () => console.log('COMPLETE')
     });
