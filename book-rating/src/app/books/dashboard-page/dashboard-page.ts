@@ -4,12 +4,12 @@ import { BookCard } from '../book-card/book-card';
 import { BookRatingHelper } from '../shared/book-rating-helper';
 import { BookStore } from '../shared/book-store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
-import { map, take, timer } from 'rxjs';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { map, take, tap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  imports: [BookCard, DatePipe],
+  imports: [BookCard, DatePipe, AsyncPipe],
   selector: 'app-dashboard-page',
   styleUrl: './dashboard-page.scss',
   templateUrl: './dashboard-page.html',
@@ -22,22 +22,18 @@ export class DashboardPage {
 
   protected readonly currentTimestamp = signal(Date.now());
 
+  time$ = timer(0, 1000).pipe(
+    map(() => Date.now()),
+    tap(e => console.log(e))
+  );
+
   constructor() {
     // AUFGABE
     // Observable erstellen, das alle 1 sek den Zeitstempel im Signal aktualisiert
     // Zeitstempel: Date.now()
     // im subscribe: so wenig wie möglich
 
-    timer(0, 1000).pipe(
-      map(() => Date.now()),
-      takeUntilDestroyed()
-    ).subscribe({
-      next: timestamp => {
-        console.log(timestamp);
-        this.currentTimestamp.set(timestamp);
-      },
-      complete: () => console.log('COMPLETE')
-    })    
+    
   }
 
   doRateUp(book: Book) {
