@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { filter, interval, map, Observable, Observer, of, Subscriber, timer } from 'rxjs';
+import { filter, interval, map, Observable, Observer, of, share, Subject, Subscriber, timer } from 'rxjs';
 
 @Component({
   imports: [RouterOutlet, RouterLink],
@@ -24,13 +24,32 @@ export class App {
     // timer(3000, 1000)    // ---------0---1---2---3---4 ...
     // timer(0, 1000)       // 0---1---2---3---4 ...
     
-    timer(0, 1000).pipe(
+    // QUELLE
+    const numbers$ = timer(0, 5000).pipe(
       map(e => e * 3),
-      filter(e => e % 2 === 0)
-    ).subscribe({
-      next: e => console.log(e),
+      // filter(e => e % 2 === 0)
+      // share()
+    );
+
+    // Subject: Verteiler
+    const mySubject$ = new Subject<number>();
+
+    // Quelle einmalig subscriben
+    // numbers$.subscribe(mySubject$);
+
+
+    /*mySubject$.subscribe({
+      next: e => console.log('A', e),
       complete: () => console.log('COMPLETE')
     });
+
+    setTimeout(() => {
+      console.log('B subscribe');
+      mySubject$.subscribe({
+        next: e => console.log('B', e),
+        complete: () => console.log('COMPLETE')
+      });
+    }, 2500)*/
 
     /////////////////////////////////////////
 
