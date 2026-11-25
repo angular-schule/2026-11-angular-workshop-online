@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { filter, interval, map, Observable, Observer, of, share, Subject, Subscriber, timer } from 'rxjs';
+import { filter, interval, map, Observable, Observer, of, share, Subject, Subscriber, take, timer } from 'rxjs';
 
 import { AuthService } from './auth/auth.service';
 
@@ -95,5 +95,19 @@ export class App {
     })
 
     // producer(obs);
+
+    /////////////////////////////////////////
+
+    function intervalFromArray<T>(intervalMs: number, values: T[]): Observable<T> {
+      return interval(intervalMs).pipe(
+        take(values.length),
+        map(i => values[i])
+      );
+    }
+
+    intervalFromArray(1000, ['A', 'B', 'C', 'D']).subscribe({
+      next: e => console.log(e),
+      complete: () => console.log('COMPLETE')
+    });
   }
 }
